@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Core_Project_Arefin.Models.Book>
+
+<h2 style="text-align:center;">List Of This Publisher</h2>
+
+
+<table class="table table-bordered table-hover table-striped justify-content-center">
+    <tr>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BookDetails)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.PublishDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th>Action</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookDetails)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.PublishDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                <a asp-action="DeleteItem" asp-route-id="@item.ID" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+
+</table>

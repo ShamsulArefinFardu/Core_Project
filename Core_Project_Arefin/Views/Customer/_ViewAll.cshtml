@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Core_Project_Arefin.Models.Customer>
+
+<div style="border:1px solid black; text-align:center;">
+    <h4 class="text-center"><i class="fas fa-comments-dollar text-success"></i><b><u>Customer Registration</u></b></h4>
+
+    <table class="table">
+        <thead class="thead-light">
+            <tr class="text-center">
+                <th>
+                    @Html.DisplayNameFor(model => model.Phone)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CustomerName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Gender)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RegistrationFee)
+                </th>
+                <th>
+                    <a onclick="showInPopup('@Url.Action("AddOrEdit","Customer",null,Context.Request.Scheme)','New Record')" class="btn btn-warning"><i class="fa fa-plus-circle"></i> New Record</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CustomerName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Gender)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RegistrationFee)
+                    </td>
+                    <td>
+                        <div>
+                            <a onclick="showInPopup('@Url.Action("AddOrEdit","Customer",new {id=item.CustomerID},Context.Request.Scheme)','Update Customer')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
+                            <form asp-action="Delete" asp-route-id="@item.CustomerID" onsubmit="return jQueryAjaxDelete(this)" class="d-inline">
+                                <input type="hidden" asp-for="@item.CustomerID" />
+                                <input type="submit" value="Delete" class="btn btn-danger" />
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

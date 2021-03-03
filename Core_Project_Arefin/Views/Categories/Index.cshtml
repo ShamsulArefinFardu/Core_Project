@@ -1,0 +1,118 @@
+﻿@model IEnumerable<Core_Project_Arefin.Models.Category>
+
+@{ ViewBag.Title = "Index"; }
+
+<div class="row">
+
+<div class="col-md-4">
+    <div id="categoryDiv">
+        <h2 style="text-align:center;">Category Info</h2>
+        <p>
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#categoryModal"><h6>Create New Category With Product</h6></button>
+
+        </p>
+        @foreach (var item in Model)
+        {
+            <table class="table table-bordered table-hover table-striped" style="text-align:center;">
+                <tr>
+                    <th>Category Name</th>
+
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <button class="btn btn-info" onclick="getDetails(@item.ID)">Details</button>&nbsp;&nbsp;
+                        <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+    </div>
+    <div class="col-md-6" style="margin-top:4rem; margin-left:7rem;">
+        <div id="itemsDiv">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @{ Html.RenderPartialAsync("Create", new Core_Project_Arefin.Models.Category()); }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            $("#categoryDiv").height($(window).height() * .80);
+            $("#itemsDiv").height($(window).height() * .70);
+
+            if (isNaN(@TempData["id"]) == false) {
+                var link = '@Url.Action("GetCategoryWiseItems", "Categories", new { id = @TempData["id"] })';
+                $("#itemsDiv").load(link);
+            }
+
+            $('#categoryModal').on('shown.bs.modal', function () {
+                $('#Name').trigger('focus');
+            });
+
+            $('#categoryModal').on('hidden.bs.modal', function (event) {
+                $("input[type=text]").val("");
+                $("input[type=number]").val("");
+                $("input[type=datetime-local]").val("");
+                $('#sl').val('0');
+
+
+                $("div").each(function () {
+                    if (parseInt(this.id) > 0) {
+                        this.remove();
+                    }
+                })
+            });
+
+            $('#addModelButton').on('click', function () {
+                var present_sl = parseInt($('#sl').val());
+                var next_sl = parseInt(present_sl) + 1;
+                var next_item = '<div id="' + next_sl + '">' + $('#' + present_sl).html() + '</div>';
+                next_item = next_item.split('_' + present_sl.toString()).join('_' + next_sl.toString());
+                next_item = next_item.split('[' + present_sl.toString() + ']').join('[' + next_sl.toString() + ']');
+                $('#' + present_sl).after(next_item);
+                $('#sl').val(next_sl);
+            });
+
+            $('#itemModal').on('hidden.bs.modal', function (event) {
+                $("input[type=text]").val("");
+                $("input[type=number]").val("");
+                $("input[type=datetime-local]").val("");
+            });
+        });
+
+        function getDetails(e) {
+            var link = '@Url.Action("GetCategoryWiseItems", "Categories", new { id = "-1" })';
+            link = link.replace("-1", e);
+            $("#itemsDiv").load(link);
+        }
+
+        var loadImage = function (event) {
+            if (event.target.files && event.target.files[0]) {
+                var img = document.getElementById('itemImage');
+                img.src = URL.createObjectURL(event.target.files[0]);
+            }
+        }
+
+        var changeImage = function (obj, event) {
+            if (event.target.files && event.target.files[0]) {
+                console.log(obj.dataset.tag);
+                var img = document.getElementById(obj.dataset.tag);
+                img.src = URL.createObjectURL(event.target.files[0]);
+            }
+        }
+
+    </script>
+}
